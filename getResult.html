@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<body>
+
+<p style='font-size:30px'>选择Excel文件</p>
+<input type="file" id="file" style='font-size:30px'>  
+
+<p style='font-size:30px'>输入工号:</p>
+<input id="staffId" type="text" style='font-size:30px'>
+
+<button onclick="read_excel()" style='font-size:30px'>点击查询</button>
+
+<h1 id="result"><h1>
+
+<script type="text/javascript">
+
+function read_excel() {
+    var filePath = document.getElementById("file").value;
+	if (filePath == "") {
+	    alert("Please select file.");
+		return;
+	}
+	var oXL = new ActiveXObject("Excel.Application");
+	try{
+	    var oWB = oXL.Workbooks.open(filePath);
+	} catch(e) {
+	    alert("failed to open file!")
+	}
+	var oSheet = oWB.ActiveSheet;
+	var rowsCount = oSheet.usedrange.rows.count;//行数
+
+	var staffIdColumn = 2;//工号所在的列，从左到右依次为1,2,3...
+	var salaryColumn = 3;//工资所在的列
+	for (var i = 1; i <= rowsCount; i++) {
+	    var id = oSheet.Cells(i, staffIdColumn);
+		if (id == document.getElementById("staffId").value) {
+		    document.getElementById("result").style.color="Red";
+			var result = getResult(oSheet.Cells(i, salaryColumn));
+		    document.getElementById("result").innerHTML = "工号：" + id + " ， result: " + result;
+			return;
+		}
+	}
+	alert("没有查询到信息！");
+    oSheet=null;
+    oWB.close();
+    oXL=null;
+}
+
+function getResult(salary) {
+    //todo
+	//根据参数，做一系列运算，返回结果
+	return salary;
+}
+
+</script>
+
+</body>
+</html>
